@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="Services.Common/Aether.Services.Common.csproj" />
+    <Project Path="Services.Core/Aether.Services.Core.csproj" />
+  </Folder>
+  <Folder Name="/Data/">
+    <Project Path="Aether.Data.Common/Aether.Data.Common.csproj" />
+    <Project Path="Aether.Data.Models/Aether.Data.Models.csproj" />
+    <Project Path="Aether.Data/Aether.Data.csproj" />
+  </Folder>
+  <Folder Name="/Tests/" />
+  <Folder Name="/Web/">
+    <Project Path="Aether/Aether.Web.csproj" />
+    <Project Path="Web.Infrastructure/Web.Infrastructure.csproj" />
+    <Project Path="Web.ViewModels/Web.ViewModels.csproj" />
+  </Folder>
+  <Project Path="Aether.GCommon/Aether.GCommon.csproj" Id="63e20470-a1f0-4e77-9699-a41005bf6599" />
+</Solution>
