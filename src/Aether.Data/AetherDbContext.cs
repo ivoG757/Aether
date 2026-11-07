@@ -17,6 +17,11 @@ namespace Aether.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<ApplicationUser>(user =>
+            {
+                user.Property(u => u.IsDeleted).HasDefaultValue(false);
+            });
+
             modelBuilder.Entity<Realm>()
                 .HasOne(realm => realm.CreatedByUser)
                 .WithMany()

@@ -10,5 +10,6 @@ namespace Aether.Data.Models
         public DateTime AccountCreationDate { get; set; }
 
         public ICollection<RealmUser> Realms { get; set; } = new HashSet<RealmUser>();
+        public bool IsDeleted { get; set; }
     }
 }

@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Aether.Data.Repositories.Contracts.Common;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Aether.Data.Models
 {
     [PrimaryKey(nameof(RealmId), nameof(UserId))]
-    public class RealmUser
+    public class RealmUser : ISoftDeletableEntity
     {
         [ForeignKey(nameof(Realm))]
         public Guid RealmId { get; set; }
@@ -16,5 +17,6 @@ namespace Aether.Data.Models
 
         public ICollection<RealmUserRole> Roles { get; set; } = new HashSet<RealmUserRole>();
         public DateTime JoinedAt { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

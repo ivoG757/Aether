@@ -8,9 +8,6 @@
     <Project Path="Aether.Data.Models/Aether.Data.Models.csproj" />
     <Project Path="Aether.Data/Aether.Data.csproj" />
   </Folder>
-  <Folder Name="/Docs/">
-    <File Path="database-design.md" />
-  </Folder>
   <Folder Name="/Tests/" />
   <Folder Name="/Web/">
     <Project Path="Aether.Web/Aether.Web.csproj" />
