@@ -1,4 +1,4 @@
-namespace Aether.Web.Models
+namespace Aether.Web.ViewModels
 {
     public class ErrorViewModel
     {

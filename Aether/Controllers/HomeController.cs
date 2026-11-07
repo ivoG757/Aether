@@ -1,4 +1,4 @@
-using Aether.Models;
+using Aether.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
