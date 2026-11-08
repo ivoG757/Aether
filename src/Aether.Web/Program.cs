@@ -2,6 +2,7 @@ using Aether.Data;
 using Aether.Data.Models;
 using Aether.Data.Repositories;
 using Aether.Data.Repositories.Contracts;
+using Aether.GCommon.Validation;
 using Aether.Services.Core;
 using Aether.Services.Core.Contracts;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<AetherDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => {
+    options.SignIn.RequireConfirmedAccount = true;
+    options.Password.RequiredLength = UserValidationConstants.PasswordMinLength;
+    options.Password.RequireNonAlphanumeric = false;
+    options.User.RequireUniqueEmail = true;
+})
     .AddEntityFrameworkStores<AetherDbContext>();
 builder.Services.AddControllersWithViews();
 

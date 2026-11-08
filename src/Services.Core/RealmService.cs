@@ -1,5 +1,6 @@
 ﻿using Aether.Data.Models;
 using Aether.Data.Repositories.Contracts;
+using Aether.Services.Common.Validation;
 using Aether.Services.Core.Contracts;
 using Aether.Services.Core.DTOs.Realm.Enums;
 using Aether.Services.Core.DTOs.Realm.Request;
@@ -24,8 +25,12 @@ namespace Aether.Services.Core
         }
         public async Task<CreateRealmResponse> CreateAsync(CreateRealmRequest request, string userId)
         {
-            if (string.IsNullOrWhiteSpace(request.RealmName))
+
+            if(!AttributeValidator.IsValid(request, out var errors))
             {
+                _logger.LogWarning("Invalid realm creation request: {Errors}",
+                    string.Join("; ", errors.Select(error => error.ErrorMessage)));
+
                 return new CreateRealmResponse
                 {
                     Status = RealmResponseStatus.InvalidRequest
@@ -75,7 +80,7 @@ namespace Aether.Services.Core
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
+                _logger.LogError(ex, "Failed to create realm for user {UserId}", userId);
                 return new CreateRealmResponse
                 {
                     Status = RealmResponseStatus.GeneralError

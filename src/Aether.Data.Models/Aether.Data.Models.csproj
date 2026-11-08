@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Aether.Data.Common\Aether.Data.Common.csproj" />
+    <ProjectReference Include="..\Aether.GCommon\Aether.GCommon.csproj" />
   </ItemGroup>
 
 </Project>

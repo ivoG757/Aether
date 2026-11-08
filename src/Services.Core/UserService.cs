@@ -10,8 +10,7 @@ namespace Aether.Services.Core
     public class UserService : IUserService
     {
         private readonly IRealmUserRepository _realmUserRepository;
-        public UserService(
-            IRealmUserRepository realmUserRepository)
+        public UserService(IRealmUserRepository realmUserRepository)
         {
             _realmUserRepository = realmUserRepository;
         }

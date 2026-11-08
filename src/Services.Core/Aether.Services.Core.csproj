@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Aether.Data\Aether.Data.csproj" />
+    <ProjectReference Include="..\Aether.GCommon\Aether.GCommon.csproj" />
+    <ProjectReference Include="..\Services.Common\Aether.Services.Common.csproj" />
   </ItemGroup>
 
 </Project>

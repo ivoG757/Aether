@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Aether.GCommon.Validation;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Aether.Web.ViewModels.Dashboard
@@ -7,12 +8,15 @@ namespace Aether.Web.ViewModels.Dashboard
     {
         [Required]
         [DisplayName("Realm Name")]
+        [StringLength(RealmValidationConstants.NameMaxLength, MinimumLength = RealmValidationConstants.NameMinLength)]
         public string RealmName { get; set; } = null!;
 
         [DisplayName("Realm Description")]
+        [StringLength(RealmValidationConstants.DescriptionMaxLength)]
         public string? RealmDescription { get; set; }
         
         [DisplayName("Icon")]
+        [StringLength(RealmValidationConstants.IconUrlMaxLength)]
         public string? Icon { get; set; } // icon shouldnt be string, but for now it is
 
         [DisplayName("Should this realm be public?")]

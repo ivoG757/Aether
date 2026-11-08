@@ -28,6 +28,10 @@ namespace Aether.Data
                 .HasForeignKey(realm => realm.OwnerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Realm>()
+                .HasIndex(realm => realm.InviteCode)
+                .IsUnique();
+
             modelBuilder.Entity<RealmUser>()
                 .HasKey(ru => new { ru.RealmId, ru.UserId });
 

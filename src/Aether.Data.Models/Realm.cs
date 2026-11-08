@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Aether.GCommon.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Aether.Data.Models
@@ -9,9 +10,13 @@ namespace Aether.Data.Models
         public Guid Id { get; set; }
 
         [Required]
+        [MaxLength(RealmValidationConstants.NameMaxLength)]
         public string Name { get; set; } = null!;
 
+        [MaxLength(RealmValidationConstants.DescriptionMaxLength)]
         public string? Description { get; set; }
+
+        [MaxLength(RealmValidationConstants.IconUrlMaxLength)]
         public string? Icon { get; set; } // icon shouldnt be string, but for now it is
         public DateTime CreatedAt { get; set; }
 
