@@ -1,4 +1,4 @@
-﻿namespace Aether.Services.Core.DTOs.Response
+﻿namespace Aether.Services.Core.DTOs.User.Response
 {
     public class JoinedRealmsResponse
     {

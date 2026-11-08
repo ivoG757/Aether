@@ -1,0 +1,43 @@
+﻿@model Aether.Web.ViewModels.Dashboard.CreateRealmViewModel
+
+<section>
+    <h1>Create your very own Realm!</h1>
+
+    <form asp-action="CreateRealm" asp-controller="Dashboard" method="post">
+
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <div>
+            <label asp-for="RealmName"></label>
+            <input asp-for="RealmName" placeholder="The name of your Realm" />
+            <span asp-validation-for="RealmName"></span>
+        </div>
+
+        <hr/>
+
+        <div>
+            <label asp-for="RealmDescription"></label>
+            <textarea asp-for="RealmDescription" placeholder="The description of your Realm"></textarea>
+            <span asp-validation-for="RealmDescription"></span>
+        </div>
+
+        <hr/>
+
+        <div>
+            <input asp-for="IsPublic" type="checkbox" />
+            <label asp-for="IsPublic">Make this realm visible to all users</label>
+            <span asp-validation-for="IsPublic"></span>
+        </div>
+
+        <hr/>
+
+        <p>Icon selection will be added later.</p>
+
+        <button type="submit">Create Realm</button>
+    </form>
+</section>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

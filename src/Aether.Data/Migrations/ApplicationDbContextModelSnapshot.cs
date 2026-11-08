@@ -144,19 +144,13 @@ namespace Aether.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Icon")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("InviteCode")
@@ -170,9 +164,13 @@ namespace Aether.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Realms");
                 });
@@ -454,13 +452,13 @@ namespace Aether.Data.Migrations
 
             modelBuilder.Entity("Aether.Data.Models.Realm", b =>
                 {
-                    b.HasOne("Aether.Data.Models.ApplicationUser", "CreatedByUser")
+                    b.HasOne("Aether.Data.Models.ApplicationUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Aether.Data.Models.RealmUser", b =>

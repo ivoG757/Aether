@@ -20,8 +20,11 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<AetherDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IRealmUserRepository, RealmUserRepository>();
+// TODO: Add service and repository registration using refrelction to reduce boilerplate
+builder.Services.AddScoped<IRealmUserRepository, RealmUserRepository>(); 
+builder.Services.AddScoped<IRealmRepository, RealmRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRealmService, RealmService>();
 
 var app = builder.Build();
 

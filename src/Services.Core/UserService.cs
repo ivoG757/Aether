@@ -1,7 +1,7 @@
 ﻿using Aether.Data.Repositories.Contracts;
 using Aether.Services.Core.Contracts;
-using Aether.Services.Core.DTOs.Request;
-using Aether.Services.Core.DTOs.Response;
+using Aether.Services.Core.DTOs.User.Request;
+using Aether.Services.Core.DTOs.User.Response;
 using Microsoft.EntityFrameworkCore;
 
 

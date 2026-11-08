@@ -11,14 +11,13 @@ namespace Aether.Data.Models
         [Required]
         public string Name { get; set; } = null!;
 
-        [Required]
-        public string Description { get; set; } = null!;
-        public string Icon { get; set; } = null!; // icon shouldnt be string, but for now it is
+        public string? Description { get; set; }
+        public string? Icon { get; set; } // icon shouldnt be string, but for now it is
         public DateTime CreatedAt { get; set; }
 
-        [ForeignKey(nameof(CreatedByUser))]
-        public string ApplicationUserId { get; set; } = null!;
-        public ApplicationUser CreatedByUser { get; set; } = null!;
+        [ForeignKey(nameof(Owner))]
+        public string OwnerId { get; set; } = null!;
+        public ApplicationUser Owner { get; set; } = null!;
 
         public ICollection<RealmUser> Members { get; set; } = new HashSet<RealmUser>();
         public ICollection<TextChannel> TextChannels { get; set; } = new HashSet<TextChannel>();

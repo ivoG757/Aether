@@ -23,9 +23,9 @@ namespace Aether.Data
             });
 
             modelBuilder.Entity<Realm>()
-                .HasOne(realm => realm.CreatedByUser)
+                .HasOne(realm => realm.Owner)
                 .WithMany()
-                .HasForeignKey(realm => realm.ApplicationUserId)
+                .HasForeignKey(realm => realm.OwnerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<RealmUser>()

@@ -3,6 +3,7 @@
 <section>
 <h1>Your joined Realms</h1>
 <div>
+    Create a realm here: <a asp-action="CreateRealm" asp-controller="Dashboard">click me</a>
         @if (!Model.Realms.Any())
         {
             <p>You haven't joined any realms yet.</p>
@@ -13,8 +14,7 @@
                 @foreach (var realm in Model.Realms)
                 {
                     <li>
-                        @* link for the realm here blah blah blah*@
-                        @realm.RealmName
+                        <a asp-action="Index" asp-controller="Realm" asp-route-id="@realm.RealmId">@realm.RealmName</a>
                     </li> 
                 }
             </ul>
