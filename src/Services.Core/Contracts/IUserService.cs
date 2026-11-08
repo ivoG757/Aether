@@ -5,6 +5,6 @@ namespace Aether.Services.Core.Contracts
 {
     public interface IUserService
     {
-        public Task<IEnumerable<JoinedRealmsResponse>> GetJoinedRealmsInfoAsync(GetJoinedRealmsRequest request);
+        public Task<IReadOnlyCollection<JoinedRealmsResponse>> GetJoinedRealmsInfoAsync(GetJoinedRealmsRequest request);
     }
 }

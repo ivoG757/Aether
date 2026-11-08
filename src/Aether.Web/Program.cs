@@ -1,5 +1,9 @@
 using Aether.Data;
 using Aether.Data.Models;
+using Aether.Data.Repositories;
+using Aether.Data.Repositories.Contracts;
+using Aether.Services.Core;
+using Aether.Services.Core.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +19,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AetherDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IRealmUserRepository, RealmUserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

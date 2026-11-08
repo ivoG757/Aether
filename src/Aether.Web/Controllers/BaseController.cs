@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Aether.Web.Controllers
 {
     [Authorize]
-    public class BaseController : Controller
+    public abstract class BaseController : Controller
     {
-        public string GetUserId()
+        protected string GetUserId()
         => User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
 
-        public bool IsUserAuthenticated() 
+        protected bool IsUserAuthenticated() 
             => User.Identity?.IsAuthenticated ?? false;
     }
 }

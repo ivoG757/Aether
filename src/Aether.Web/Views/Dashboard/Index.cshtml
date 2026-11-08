@@ -1,0 +1,23 @@
+﻿@model Aether.Web.ViewModels.Dashboard.DashboardViewModel;
+
+<section>
+<h1>Your joined Realms</h1>
+<div>
+        @if (!Model.Realms.Any())
+        {
+            <p>You haven't joined any realms yet.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var realm in Model.Realms)
+                {
+                    <li>
+                        @* link for the realm here blah blah blah*@
+                        @realm.RealmName
+                    </li> 
+                }
+            </ul>
+        }
+    </div>
+</section>
