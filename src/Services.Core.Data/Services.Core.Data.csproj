@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Aether.GCommon\Aether.GCommon.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Channel\Request\" />
+  </ItemGroup>
+
+</Project>

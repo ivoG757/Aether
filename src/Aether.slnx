@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Core/">
     <Project Path="Services.Common/Aether.Services.Common.csproj" />
+    <Project Path="Services.Core.Data/Services.Core.Data.csproj" Id="0b9725ba-145f-4b38-8e9d-fd6c71b73493" />
     <Project Path="Services.Core/Aether.Services.Core.csproj" />
   </Folder>
   <Folder Name="/Data/">

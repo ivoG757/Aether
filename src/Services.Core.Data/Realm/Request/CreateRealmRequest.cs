@@ -1,7 +1,7 @@
 ﻿using Aether.GCommon.Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace Aether.Services.Core.DTOs.Realm.Request
+namespace Aether.Services.Core.Data.Realm.Request
 {
     public class CreateRealmRequest
     {

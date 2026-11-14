@@ -1,6 +1,8 @@
 using Aether.Data.Repositories;
 using Aether.Services.Core;
 using Aether.Web.Extensions;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.RegisterRepositories(typeof(RealmRepository));
 builder.Services.RegisterServices(typeof(UserService));
+
+builder.Services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+
 
 var app = builder.Build();
 

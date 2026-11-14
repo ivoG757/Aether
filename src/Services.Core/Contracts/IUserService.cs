@@ -1,5 +1,5 @@
-﻿using Aether.Services.Core.DTOs.User.Request;
-using Aether.Services.Core.DTOs.User.Response;
+﻿using Aether.Services.Core.Data.User.Request;
+using Aether.Services.Core.Data.User.Response;
 
 namespace Aether.Services.Core.Contracts
 {

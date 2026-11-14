@@ -1,4 +1,4 @@
-﻿namespace Aether.Services.Core.DTOs.User.Request
+﻿namespace Aether.Services.Core.Data.User.Request
 {
     public class GetJoinedRealmsRequest
     {

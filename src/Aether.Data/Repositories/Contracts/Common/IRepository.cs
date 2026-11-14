@@ -1,4 +1,6 @@
-﻿namespace Aether.Data.Repositories.Contracts.Common
+﻿using Aether.Data.Models;
+
+namespace Aether.Data.Repositories.Contracts.Common
 {
     public interface IRepository<TEntity>
        where TEntity : class

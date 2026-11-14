@@ -1,11 +1,11 @@
 ﻿using Aether.Services.Core.Contracts;
-using Aether.Services.Core.DTOs.Realm.Enums;
-using Aether.Services.Core.DTOs.Realm.Request;
-using Aether.Services.Core.DTOs.Realm.Response;
-using Aether.Services.Core.DTOs.User.Request;
-using Aether.Services.Core.DTOs.User.Response;
+using Aether.Services.Core.Data.Realm.Request;
+using Aether.Services.Core.Data.Realm.Response;
+using Aether.Services.Core.Data.User.Request;
+using Aether.Services.Core.Data.User.Response;
 using Aether.Web.ViewModels.Dashboard;
 using Microsoft.AspNetCore.Mvc;
+using Aether.Services.Core.Data;
 
 namespace Aether.Web.Controllers
 {
@@ -75,11 +75,11 @@ namespace Aether.Web.Controllers
 
             CreateRealmResponse response = await _realmService.CreateAsync(request, GetUserId());
 
-            if(response.Status == RealmResponseStatus.GeneralError)
+            if(response.Status == ResponseStatus.GeneralError)
             {
                 return StatusCode(500);
             }
-            if(response.Status == RealmResponseStatus.InvalidRequest)
+            if(response.Status == ResponseStatus.InvalidRequest)
             {
                 return BadRequest();
             }

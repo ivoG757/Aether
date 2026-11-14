@@ -2,11 +2,13 @@
 using Aether.Data.Repositories.Contracts;
 using Aether.Services.Common.Validation;
 using Aether.Services.Core.Contracts;
-using Aether.Services.Core.DTOs.Realm.Enums;
-using Aether.Services.Core.DTOs.Realm.Request;
-using Aether.Services.Core.DTOs.Realm.Response;
+using Aether.Services.Core.Data.Realm.Request;
+using Aether.Services.Core.Data.Realm.Response;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Aether.Services.Core.Data;
+using Aether.Services.Core.Data.Channel.Response;
 
 namespace Aether.Services.Core
 {
@@ -33,7 +35,7 @@ namespace Aether.Services.Core
 
                 return new CreateRealmResponse
                 {
-                    Status = RealmResponseStatus.InvalidRequest
+                    Status = ResponseStatus.InvalidRequest
                 };
             }
 
@@ -43,7 +45,7 @@ namespace Aether.Services.Core
             {
                 return new CreateRealmResponse
                 {
-                    Status = RealmResponseStatus.InvalidRequest
+                    Status = ResponseStatus.InvalidRequest
                 };
             }
 
@@ -74,16 +76,82 @@ namespace Aether.Services.Core
                 await _repository.SaveChangesAsync();
                 return new CreateRealmResponse
                 {
-                    Status = RealmResponseStatus.Success,
+                    Status = ResponseStatus.Success,
                     RealmId = realm.Id
                 };
             }
+
             catch(Exception ex)
             {
                 _logger.LogError(ex, "Failed to create realm for user {UserId}", userId);
                 return new CreateRealmResponse
                 {
-                    Status = RealmResponseStatus.GeneralError
+                    Status = ResponseStatus.GeneralError
+                };
+            }
+        }
+
+        public async Task<GetStructureResponse> GetStructureAsync(Guid realmId, string userId)
+        {
+            if(string.IsNullOrEmpty(userId))
+            {
+                return new GetStructureResponse
+                {
+                    Status = ResponseStatus.InvalidRequest
+                };
+            }
+
+            try
+            {
+                Realm? realm = await _repository
+                .AllAsNoTracking()
+                .AsSplitQuery()
+                .Include(r => r.TextChannels)
+                .Include(r => r.VoiceChannels)
+                .Where(r => r.Id == realmId && r.Members.Any(member => member.UserId == userId && !member.IsDeleted))
+                .SingleOrDefaultAsync();
+
+                if (realm == null)
+                {
+                    return new GetStructureResponse
+                    {
+                        Status = ResponseStatus.NotFound
+                    };
+                }
+
+                return new GetStructureResponse
+                {
+                    RealmId = realm.Id,
+                    Status = ResponseStatus.Success,
+                    Name = realm.Name,
+                    Icon = realm.Icon,
+                    TextChannels = realm.TextChannels.Select(tc => new TextChannelNavigationItemResponse
+                    {
+                        Id = tc.Id,
+                        Name = tc.Name,
+                        Icon = tc.Icon,
+                        Category = tc.Category
+                    })
+                    .ToList(),
+
+                    VoiceChannels = realm.VoiceChannels.Select(vc => new VoiceChannelNavigationItemResponse
+                    {
+                        Id = vc.Id,
+                        Name = vc.Name,
+                        Icon = vc.Icon,
+                        Category = vc.Category
+                    })
+                    .ToList()
+                };
+            }
+
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve realm {RealmId} for user {UserId}", realmId, userId);
+
+                return new GetStructureResponse
+                {
+                    Status = ResponseStatus.GeneralError
                 };
             }
         }
