@@ -1,4 +1,4 @@
-﻿using Aether.Web.ViewModels.Channels;
+﻿using Aether.Web.ViewModels.Category;
 
 namespace Aether.Web.ViewModels.Realm
 {
@@ -7,9 +7,6 @@ namespace Aether.Web.ViewModels.Realm
         public Guid RealmId { get; set; }
         public string? Name { get; set; }
         public string? Icon { get; set; }
-        public ICollection<TextChannelNavigationItemViewModel> TextChannels { get; set; } = 
-            new List<TextChannelNavigationItemViewModel>();
-        public ICollection<VoiceChannelNavigationItemViewModel> VoiceChannels { get; set; } = 
-            new List<VoiceChannelNavigationItemViewModel>();
+        public ICollection<CategoryViewModel> Categories { get; set; } = new List<CategoryViewModel>();
     }
 }

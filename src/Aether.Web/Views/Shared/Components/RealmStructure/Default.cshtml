@@ -1,0 +1,50 @@
+﻿@using Aether.Web.ViewModels.Category
+@model Aether.Web.ViewModels.Realm.RealmStructureViewModel
+
+<aside class="realm-tree" aria-labelledby="realm-name">
+    <header class="tree-heading">
+
+        @if (!string.IsNullOrWhiteSpace(Model.Icon))
+        {
+            <img src="@Model.Icon" alt="" width="28" height="28" />
+        }
+
+        <h2 id="realm-name">@Model.Name</h2>
+
+    </header>
+    <div class="channel-category">
+
+        @foreach (CategoryViewModel category in Model.Categories
+        .OrderBy(c => c.Position)
+        .ThenBy(c => c.Name))
+        {
+            <details open> @*TODO: Add a way to collapse/expand categories and a way to sort channels properly*@
+                <summary>@category.Name</summary>
+                @foreach (var channel in category.ChannelsInOrder)
+                {
+                    if (channel is TextChannelNavigationItemViewModel text)
+                    {
+                        <button type="button" class="channel-row" data-text-channel="@channel.Id">
+                            <span aria-hidden="true">#</span>
+                            <span class="channel-name">@channel.Name</span>
+                        </button>
+                    }
+                    else if (channel is VoiceChannelNavigationItemViewModel voice)
+                    {
+                        <button type="button" class="channel-row" data-voice-channel="@channel.Id">
+                            <span aria-hidden="true" class="bi bi-volume-down-fill"></span>
+                            <span class="channel-name">@channel.Name</span>
+                        </button>
+                    }
+                }
+            </details>
+        }
+        @if (!Model.Categories.SelectMany(c => c.ChannelsInOrder).Any())
+        {
+            @if (!Model.Categories.Any())
+            {
+                <p>No channels yet.</p>
+            }            
+        }
+    </div>
+</aside>

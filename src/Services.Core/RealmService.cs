@@ -1,14 +1,15 @@
-﻿using Aether.Data.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+using Aether.Data.Models;
 using Aether.Data.Repositories.Contracts;
 using Aether.Services.Common.Validation;
 using Aether.Services.Core.Contracts;
-using Aether.Services.Core.Data.Realm.Request;
-using Aether.Services.Core.Data.Realm.Response;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Aether.Services.Core.Data.Structure.Request;
+using Aether.Services.Core.Data.Structure.Response;
 using Aether.Services.Core.Data;
-using Aether.Services.Core.Data.Channel.Response;
+using Aether.Services.Core.Data.Realm.Response;
 
 namespace Aether.Services.Core
 {
@@ -104,12 +105,15 @@ namespace Aether.Services.Core
             try
             {
                 Realm? realm = await _repository
-                .AllAsNoTracking()
-                .AsSplitQuery()
-                .Include(r => r.TextChannels)
-                .Include(r => r.VoiceChannels)
-                .Where(r => r.Id == realmId && r.Members.Any(member => member.UserId == userId && !member.IsDeleted))
-                .SingleOrDefaultAsync();
+                    .AllAsNoTracking()
+                    .AsSplitQuery()
+                    .Include(r => r.Categories)
+                    .ThenInclude(c => c.TextChannels)
+                    .Include(r => r.Categories)
+                    .ThenInclude(c => c.VoiceChannels)
+                    .SingleOrDefaultAsync(r =>
+                    r.Id == realmId &&
+                    r.Members.Any(m => m.UserId == userId && !m.IsDeleted));
 
                 if (realm == null)
                 {
@@ -125,23 +129,30 @@ namespace Aether.Services.Core
                     Status = ResponseStatus.Success,
                     Name = realm.Name,
                     Icon = realm.Icon,
-                    TextChannels = realm.TextChannels.Select(tc => new TextChannelNavigationItemResponse
+                    Categories = realm.Categories.Select(category => new CategoryResponse
                     {
-                        Id = tc.Id,
-                        Name = tc.Name,
-                        Icon = tc.Icon,
-                        Category = tc.Category
-                    })
-                    .ToList(),
+                        Id = category.Id,
+                        Name = category.Name,
+                        Position = category.Position,
 
-                    VoiceChannels = realm.VoiceChannels.Select(vc => new VoiceChannelNavigationItemResponse
-                    {
-                        Id = vc.Id,
-                        Name = vc.Name,
-                        Icon = vc.Icon,
-                        Category = vc.Category
-                    })
-                    .ToList()
+                        TextChannelNavigationItems = category.TextChannels
+                        .Select(c => new TextChannelNavigationItemResponse
+                        {
+                            Id = c.Id,
+                            Name = c.Name,
+                            Icon = c.Icon,
+                            Position = c.Position
+                        }).ToList(),
+
+                        VoiceChannelNavigationItems = category.VoiceChannels
+                        .Select(c => new VoiceChannelNavigationItemResponse
+                        {
+                            Id = c.Id,
+                            Name = c.Name,
+                            Icon = c.Icon,
+                            Position = c.Position
+                        }).ToList()
+                    }).ToList()
                 };
             }
 

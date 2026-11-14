@@ -1,0 +1,25 @@
+﻿@model Aether.Web.ViewModels.Realm.IRealmPageViewModels
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/css/aether.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/realm.css" asp-append-version="true" />
+</head>
+<body class="realm">
+    <div class="realm-workspace">
+        <vc:realm-structure realm-id="@Model.RealmId"></vc:realm-structure>
+
+        <main class="realm-content">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

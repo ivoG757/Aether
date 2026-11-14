@@ -1,6 +1,4 @@
-﻿using Aether.Services.Core.Data;
-
-namespace Aether.Services.Core.Data.Realm.Response
+﻿namespace Aether.Services.Core.Data.Structure.Response
 {
     public class CreateRealmResponse
     {

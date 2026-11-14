@@ -1,6 +1,6 @@
 ﻿using Aether.Services.Core.Contracts;
-using Aether.Services.Core.Data.Realm.Request;
-using Aether.Services.Core.Data.Realm.Response;
+using Aether.Services.Core.Data.Structure.Request;
+using Aether.Services.Core.Data.Structure.Response;
 using Aether.Services.Core.Data.User.Request;
 using Aether.Services.Core.Data.User.Response;
 using Aether.Web.ViewModels.Dashboard;
@@ -84,7 +84,7 @@ namespace Aether.Web.Controllers
                 return BadRequest();
             }
 
-            return RedirectToAction(nameof(RealmController.Index), "Realm", new { id = response.RealmId } );
+            return RedirectToAction(nameof(RealmController.In), "Realm", new { id = response.RealmId } );
         }
     }
 }

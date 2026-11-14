@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Aether.GCommon\Aether.GCommon.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Channel\Request\" />
-  </ItemGroup>
-
 </Project>

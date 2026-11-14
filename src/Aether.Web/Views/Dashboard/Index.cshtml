@@ -14,7 +14,7 @@
                 @foreach (var realm in Model.Realms)
                 {
                     <li>
-                        <a asp-action="Index" asp-controller="Realm" asp-route-id="@realm.RealmId">@realm.RealmName</a>
+                        <a asp-action="In" asp-controller="Realm" asp-route-id="@realm.RealmId">@realm.RealmName</a>
                     </li> 
                 }
             </ul>

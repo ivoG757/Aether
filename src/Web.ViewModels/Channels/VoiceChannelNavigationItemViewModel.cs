@@ -1,8 +1,10 @@
 ﻿namespace Aether.Web.ViewModels.Channels
 {
-    public class VoiceChannelNavigationItemViewModel
+    public class VoiceChannelNavigationItemViewModel : INavigationChannelItem
     {
         public Guid Id { get; init; }
+
+        public int Position { get; init; }
 
         public string Name { get; init; } = null!;
 

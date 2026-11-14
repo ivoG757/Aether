@@ -1,9 +1,11 @@
 ﻿
 namespace Aether.Web.ViewModels.Channels
 {
-    public class TextChannelNavigationItemViewModel
+    public class TextChannelNavigationItemViewModel : INavigationChannelItem
     {
         public Guid Id { get; init; }
+
+        public int Position { get; init; }
 
         public string Name { get; init; } = null!;
 

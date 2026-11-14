@@ -25,8 +25,7 @@ namespace Aether.Data.Models
         public ApplicationUser Owner { get; set; } = null!;
 
         public ICollection<RealmUser> Members { get; set; } = new HashSet<RealmUser>();
-        public ICollection<TextChannel> TextChannels { get; set; } = new HashSet<TextChannel>();
-        public ICollection<VoiceChannel> VoiceChannels { get; set; } = new HashSet<VoiceChannel>();
+        public ICollection<Category> Categories { get; set; } = new HashSet<Category>();
         public ICollection<Role> Roles { get; set; } = new HashSet<Role>();
         public string InviteCode { get; set; } = null!;
         public bool IsPublic { get; set; }

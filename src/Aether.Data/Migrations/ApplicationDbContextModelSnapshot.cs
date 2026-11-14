@@ -107,6 +107,30 @@ namespace Aether.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Aether.Data.Models.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("RealmId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RealmId");
+
+                    b.ToTable("Category");
+                });
+
             modelBuilder.Entity("Aether.Data.Models.Message", b =>
                 {
                     b.Property<Guid>("Id")
@@ -255,8 +279,8 @@ namespace Aether.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -268,12 +292,12 @@ namespace Aether.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RealmId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RealmId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("TextChannels");
                 });
@@ -284,8 +308,8 @@ namespace Aether.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -297,12 +321,12 @@ namespace Aether.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RealmId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Position")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RealmId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("VoiceChannels");
                 });
@@ -444,6 +468,17 @@ namespace Aether.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Aether.Data.Models.Category", b =>
+                {
+                    b.HasOne("Aether.Data.Models.Realm", "Realm")
+                        .WithMany("Categories")
+                        .HasForeignKey("RealmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Realm");
+                });
+
             modelBuilder.Entity("Aether.Data.Models.Message", b =>
                 {
                     b.HasOne("Aether.Data.Models.ApplicationUser", "User")
@@ -522,24 +557,24 @@ namespace Aether.Data.Migrations
 
             modelBuilder.Entity("Aether.Data.Models.TextChannel", b =>
                 {
-                    b.HasOne("Aether.Data.Models.Realm", "Realm")
+                    b.HasOne("Aether.Data.Models.Category", "Category")
                         .WithMany("TextChannels")
-                        .HasForeignKey("RealmId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Realm");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Aether.Data.Models.VoiceChannel", b =>
                 {
-                    b.HasOne("Aether.Data.Models.Realm", "Realm")
+                    b.HasOne("Aether.Data.Models.Category", "Category")
                         .WithMany("VoiceChannels")
-                        .HasForeignKey("RealmId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Realm");
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -598,15 +633,20 @@ namespace Aether.Data.Migrations
                     b.Navigation("Realms");
                 });
 
-            modelBuilder.Entity("Aether.Data.Models.Realm", b =>
+            modelBuilder.Entity("Aether.Data.Models.Category", b =>
                 {
-                    b.Navigation("Members");
-
-                    b.Navigation("Roles");
-
                     b.Navigation("TextChannels");
 
                     b.Navigation("VoiceChannels");
+                });
+
+            modelBuilder.Entity("Aether.Data.Models.Realm", b =>
+                {
+                    b.Navigation("Categories");
+
+                    b.Navigation("Members");
+
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("Aether.Data.Models.RealmUser", b =>

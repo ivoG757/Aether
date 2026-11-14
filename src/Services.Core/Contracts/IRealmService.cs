@@ -1,5 +1,6 @@
-﻿using Aether.Services.Core.Data.Realm.Request;
-using Aether.Services.Core.Data.Realm.Response;
+﻿using Aether.Services.Core.Data.Realm.Response;
+using Aether.Services.Core.Data.Structure.Request;
+using Aether.Services.Core.Data.Structure.Response;
 namespace Aether.Services.Core.Contracts
 {
     public interface IRealmService

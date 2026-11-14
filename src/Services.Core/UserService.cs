@@ -1,8 +1,9 @@
-﻿using Aether.Data.Repositories.Contracts;
+﻿using Microsoft.EntityFrameworkCore;
+
+using Aether.Data.Repositories.Contracts;
 using Aether.Services.Core.Contracts;
 using Aether.Services.Core.Data.User.Request;
 using Aether.Services.Core.Data.User.Response;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace Aether.Services.Core
