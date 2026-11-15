@@ -22,6 +22,14 @@ namespace Aether.Data
                 user.Property(u => u.IsDeleted).HasDefaultValue(false);
             });
 
+            modelBuilder.Entity<Message>()
+                .HasIndex(message => new
+                {
+                    message.TextChannelId,
+                    message.CreatedAt,
+                    message.Id
+                });
+
             modelBuilder.Entity<Realm>()
                 .HasOne(realm => realm.Owner)
                 .WithMany()

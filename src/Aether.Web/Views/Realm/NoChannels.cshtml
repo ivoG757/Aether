@@ -1,0 +1,19 @@
+@model RealmEmptyStateViewModel
+@{
+    Layout = "_RealmLayout.cshtml";
+    ViewData["Title"] = "No text channels";
+}
+
+<section class="realm-empty" aria-labelledby="empty-realm-title">
+    <div class="realm-empty__panel">
+        <div class="realm-empty__mark" aria-hidden="true">#</div>
+        <h1 id="empty-realm-title">No text channels yet.</h1>
+        <p>
+            Once a text channel is created, Aether will open it here automatically.
+        </p>
+        <a asp-controller="Dashboard" asp-action="Index" class="realm-empty__back">
+            <span aria-hidden="true">←</span>
+            Back to dashboard
+        </a>
+    </div>
+</section>

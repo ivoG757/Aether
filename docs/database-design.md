@@ -8,7 +8,8 @@ The owner relationship is restricted for deletion. An owner cannot be physically
 
 A realm also has a one-to-many relationship with roles. A realm can have many roles, but each role belongs to exactly one realm.
 
-![Aether core database relationships](image-1.png)
+> **Note:** The database schema image below is currently outdated and will be replaced.
+> ![Aether core database relationships](image-1.png)
 
 A member can hold many roles within a realm. I introduced RealmUserRole to represent the roles assigned to a membership. It uses the identifiers of Realm, User and Role as a composite primary key, allowing a member to have many roles while preventing the same role from being assigned to them twice.
 
@@ -19,3 +20,5 @@ Both ApplicationUser and RealmUser support soft deletion.
 ApplicationUser is soft-deleted so that messages and other historical records can continue referencing the original account. There is no global ApplicationUser query filter because some queries must still access deleted users. When message display is implemented, deleted authors will appear as “Deleted User.”
 
 RealmUser is soft-deleted to preserve the membership record and its related history after a member leaves a realm.
+
+A realm can have many categories. Each category has a `Position` property, which determines its order within the realm. A category can contain many text and voice channels, and each channel has its own `Position` property, which determines its order within that category.

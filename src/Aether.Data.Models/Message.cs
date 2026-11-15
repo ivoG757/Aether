@@ -15,6 +15,10 @@ namespace Aether.Data.Models
         public string? AttachmentUrl { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        [ForeignKey(nameof(TextChannel))]
+        public Guid TextChannelId { get; set; }
+        public TextChannel TextChannel { get; set; } = null!; 
+
         [ForeignKey(nameof(User))]
         public string ApplicationUserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;

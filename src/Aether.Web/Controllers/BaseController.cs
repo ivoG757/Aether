@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Aether.Services.Core.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aether.Web.Controllers
@@ -11,5 +12,6 @@ namespace Aether.Web.Controllers
 
         protected bool IsUserAuthenticated() 
             => User.Identity?.IsAuthenticated ?? false;
+
     }
 }

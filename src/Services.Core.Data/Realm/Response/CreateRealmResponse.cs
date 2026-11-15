@@ -1,4 +1,4 @@
-﻿namespace Aether.Services.Core.Data.Structure.Response
+﻿namespace Aether.Services.Core.Data.Realm.Response
 {
     public class CreateRealmResponse
     {

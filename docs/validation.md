@@ -9,4 +9,4 @@ Validation is applied at multiple levels:
 - Domain models use attributes and EF Core configuration to define database column constraints.
 - Business rules that require application state to remain inside the service layer.
 
-Database foreign keys, unique indexes and length constraints provide the final layer integrity.
+Database foreign keys, unique indexes and length constraints provide the final layer of integrity.

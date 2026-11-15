@@ -1,35 +1,33 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-
-using Aether.Data.Models;
+﻿using Aether.Data.Models;
 using Aether.Data.Repositories.Contracts;
 using Aether.Services.Common.Validation;
 using Aether.Services.Core.Contracts;
-using Aether.Services.Core.Data.Structure.Request;
-using Aether.Services.Core.Data.Structure.Response;
 using Aether.Services.Core.Data;
+using Aether.Services.Core.Data.Realm.Request;
 using Aether.Services.Core.Data.Realm.Response;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Aether.Services.Core
 {
     public class RealmService : IRealmService
     {
         private readonly ILogger<RealmService> _logger;
-        private readonly IRealmRepository _repository;
+        private readonly IRealmRepository _realmRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         public RealmService(IRealmRepository repository,
             UserManager<ApplicationUser> userManager,
             ILogger<RealmService> logger)
         {
-            _repository = repository;
+            _realmRepository = repository;
             _userManager = userManager;
             _logger = logger;
         }
         public async Task<CreateRealmResponse> CreateAsync(CreateRealmRequest request, string userId)
         {
 
-            if(!AttributeValidator.IsValid(request, out var errors))
+            if (!AttributeValidator.IsValid(request, out var errors))
             {
                 _logger.LogWarning("Invalid realm creation request: {Errors}",
                     string.Join("; ", errors.Select(error => error.ErrorMessage)));
@@ -73,8 +71,8 @@ namespace Aether.Services.Core
 
             try
             {
-                await _repository.AddAsync(realm);
-                await _repository.SaveChangesAsync();
+                await _realmRepository.AddAsync(realm);
+                await _realmRepository.SaveChangesAsync();
                 return new CreateRealmResponse
                 {
                     Status = ResponseStatus.Success,
@@ -82,7 +80,7 @@ namespace Aether.Services.Core
                 };
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to create realm for user {UserId}", userId);
                 return new CreateRealmResponse
@@ -94,7 +92,7 @@ namespace Aether.Services.Core
 
         public async Task<GetStructureResponse> GetStructureAsync(Guid realmId, string userId)
         {
-            if(string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
                 return new GetStructureResponse
                 {
@@ -104,7 +102,7 @@ namespace Aether.Services.Core
 
             try
             {
-                Realm? realm = await _repository
+                Realm? realm = await _realmRepository
                     .AllAsNoTracking()
                     .AsSplitQuery()
                     .Include(r => r.Categories)
@@ -156,11 +154,96 @@ namespace Aether.Services.Core
                 };
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve realm {RealmId} for user {UserId}", realmId, userId);
 
                 return new GetStructureResponse
+                {
+                    Status = ResponseStatus.GeneralError
+                };
+            }
+        }
+
+        public async Task<GetChannelChatResponse> GetChannelChatAsync(GetChannelChatRequest request, string userId)
+        {
+            //TODO: Apply channel visibility permissions when Realm roles and permissions are implemented
+
+            if(string.IsNullOrEmpty(userId))
+            {
+                return new GetChannelChatResponse
+                {
+                    Status = ResponseStatus.InvalidRequest
+                };
+            }
+
+            try
+            {
+                var result = await _realmRepository
+                    .AllAsNoTracking()
+                    .Where(r => r.Id == request.RealmId &&
+                    r.Members.Any(m => m.UserId == userId &&
+                    !m.IsDeleted))
+                    .Select(r => new
+                    {
+                        Channel = r.Categories
+                        .SelectMany(c => c.TextChannels)
+                        .Where(channel =>
+                        !request.ChannelId.HasValue ||
+                        channel.Id == request.ChannelId.Value)
+                        .OrderBy(c => c.Category.Position)
+                        .ThenBy(c => c.Position)
+                        .Select(channel => new
+                        {
+                            channel.Id,
+                            channel.Name
+                        }).FirstOrDefault()
+                    })
+                    .SingleOrDefaultAsync();
+
+                //realm does not exist or the user cannot access it
+                if (result is null)
+                {
+                    return new GetChannelChatResponse
+                    {
+                        Status = ResponseStatus.NotFound
+                    };
+                }
+
+                //unexisting or unallowed channel was requested
+                if (result.Channel is null && request.ChannelId.HasValue)
+                {
+                    return new GetChannelChatResponse
+                    {
+                        Status = ResponseStatus.NotFound
+                    };
+                }
+
+                //realm exists but has no channels to default to
+                if (result.Channel is null)
+                {
+                    return new GetChannelChatResponse
+                    {
+                        Status = ResponseStatus.Success,
+                        ChannelId = null,
+                        ChannelName = null
+                    };
+                }
+
+                //successfuly return requested channel from realm
+                return new GetChannelChatResponse
+                {
+                    Status = ResponseStatus.Success,
+                    ChannelId = result.Channel.Id,
+                    ChannelName = result.Channel.Name
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unable to load chat for realm {RealmId}, channel {ChannelId}, user {UserId}",
+                    request.RealmId, request.ChannelId, userId);
+
+                return new GetChannelChatResponse
                 {
                     Status = ResponseStatus.GeneralError
                 };

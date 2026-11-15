@@ -4,6 +4,6 @@
     {
         public Guid RealmId { get; init; }
         public string ChannelName { get; init; } = string.Empty;
-        public ICollection<MessageViewModel> Messages { get; init; } = new List<MessageViewModel>();
+        public Guid ChannelId { get; init; }
     }
 }
