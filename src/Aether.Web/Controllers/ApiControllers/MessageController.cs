@@ -5,6 +5,7 @@ using Aether.Services.Core.Data.Message.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Aether.Web.ViewModels.Message;
 
 namespace Aether.Web.Controllers.ApiControllers
 {
@@ -51,6 +52,47 @@ namespace Aether.Web.Controllers.ApiControllers
                 _ => StatusCode(StatusCodes.Status500InternalServerError)
             };
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMessageAsync(
+            Guid realmId, Guid channelId, [FromBody] CreateMessageInputModel input)
+        {
+            string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized();
+            }
+
+            var request = new CreateMessageForChannelRequest
+            {
+                RealmId = realmId,
+                ChannelId = channelId,
+                Text = input.Text
+            };
+
+            CreateMessageForChannelResponse response =
+                await _messageService.CreateMessageForChannelAsync(request, userId);
+
+            return response.Status switch
+            {
+                ResponseStatus.Success => StatusCode(
+                    StatusCodes.Status201Created,
+                    new
+                    {
+                        response.MessageId,
+                        response.Text,
+                        response.CreatedAt
+                    }),
+
+                ResponseStatus.InvalidRequest => BadRequest(),
+                ResponseStatus.NotFound => NotFound(),
+                ResponseStatus.GeneralError =>
+                    StatusCode(StatusCodes.Status500InternalServerError),
+
+                _ => StatusCode(StatusCodes.Status500InternalServerError)
+            };
         }
     }
 }

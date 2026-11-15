@@ -5,6 +5,12 @@ namespace Aether.Services.Core.Contracts
 {
     public interface IMessageService
     {
-        public Task<GetChannelMessagesResponse> GetMessagesForChannelAsync(GetChannelMessagesRequest request, string userId);
+        public Task<GetChannelMessagesResponse> GetMessagesForChannelAsync(
+            GetChannelMessagesRequest request, string userId);
+
+        public Task<CreateMessageForChannelResponse> CreateMessageForChannelAsync(
+            CreateMessageForChannelRequest request, string userId);
+
+
     }
 }

@@ -1,9 +1,13 @@
 ﻿using Aether.Data.Models;
+using Aether.Data.Models.Enums;
 using Aether.Data.Repositories.Contracts;
+
+using Aether.Services.Common.Validation;
+
 using Aether.Services.Core.Contracts;
 using Aether.Services.Core.Data;
-using Aether.Services.Core.Data.Message.Response;
 using Aether.Services.Core.Data.Message.Request;
+using Aether.Services.Core.Data.Message.Response;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -31,8 +35,7 @@ namespace Aether.Services.Core
             if (string.IsNullOrWhiteSpace(userId) ||
                 request.RealmId == Guid.Empty ||
                 request.ChannelId == Guid.Empty ||
-                request.Skip < 0 ||
-                request.Take < 1)
+                request.Skip < 0 || request.Take < 1)
             {
                 return new GetChannelMessagesResponse
                 {
@@ -63,7 +66,7 @@ namespace Aether.Services.Core
                         .Select(m => new MessageResponse
                         {
                             Id = m.Id,
-                            SenderId = m.ApplicationUserId,
+                            SenderId = m.UserId,
                             SenderName = m.User.UserName!,
                             SenderIcon = m.User.ProfilePicture,
                             Text = m.Text,
@@ -94,6 +97,89 @@ namespace Aether.Services.Core
                     userId);
 
                 return new GetChannelMessagesResponse
+                {
+                    Status = ResponseStatus.GeneralError
+                };
+            }
+        }
+        public async Task<CreateMessageForChannelResponse> CreateMessageForChannelAsync(
+            CreateMessageForChannelRequest request, string userId)
+        {
+            if(!AttributeValidator.IsValid(request, out var errors))
+            {
+                return new CreateMessageForChannelResponse
+                {
+                    Status = ResponseStatus.InvalidRequest
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return new CreateMessageForChannelResponse
+                {
+                    Status = ResponseStatus.InvalidRequest
+                };
+            }
+
+            try
+            {
+                var currentUser = await _channelRepository
+                    .AllAsNoTracking()
+                    .Where(c => 
+                    c.Id == request.ChannelId &&
+                    c.Category.RealmId == request.RealmId)
+                    .SelectMany(c => c.Category.Realm.Members)
+                    .Where(m =>
+                    m.UserId == userId &&
+                    !m.IsDeleted &&
+                    !m.User.IsDeleted)
+                    .Select(m => new
+                    {
+                        SenderName = m.User.UserName!,
+                        SenderIcon = m.User.ProfilePicture
+                    })
+                    .SingleOrDefaultAsync();
+
+                if (currentUser == null)
+                {
+                    return new CreateMessageForChannelResponse
+                    {
+                        Status = ResponseStatus.NotFound
+                    };
+                }
+
+                var message = new Message
+                {
+                    Type = MessageType.Text,
+                    Text = request.Text?.Trim(),
+                    CreatedAt = DateTime.UtcNow,
+                    TextChannelId = request.ChannelId,
+                    UserId = userId
+                };
+
+                await _messageRepository.AddAsync(message);
+                await _messageRepository.SaveChangesAsync();
+
+                return new CreateMessageForChannelResponse
+                {
+                    Status = ResponseStatus.Success,
+                    MessageId = message.Id,
+                    Text = message.Text,
+                    CreatedAt = message.CreatedAt,
+                    ProfilePic = currentUser.SenderIcon,
+                    Username = currentUser.SenderName
+                };
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(
+                    exception,
+                    "Failed to create message in realm {RealmId}, channel {ChannelId}, for user {UserId}",
+                    request.RealmId,
+                    request.ChannelId,
+                    userId);
+
+                return new CreateMessageForChannelResponse
                 {
                     Status = ResponseStatus.GeneralError
                 };

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="~/css/realm.css" asp-append-version="true" />
 </head>
 <body class="realm">
-    <div class="realm-workspace">
+    <div class="realm-workspace" data-realm-id="@Model.RealmId">
         <vc:realm-structure realm-id="@Model.RealmId"></vc:realm-structure>
 
         <main class="realm-content">
