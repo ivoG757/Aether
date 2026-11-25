@@ -90,7 +90,6 @@ namespace Aether.Web.Controllers.ApiControllers
                 ResponseStatus.NotFound => NotFound(),
                 ResponseStatus.GeneralError =>
                     StatusCode(StatusCodes.Status500InternalServerError),
-
                 _ => StatusCode(StatusCodes.Status500InternalServerError)
             };
         }

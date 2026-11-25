@@ -137,10 +137,6 @@ namespace Aether.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("AttachmentUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -148,19 +144,24 @@ namespace Aether.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
-                    b.Property<Guid?>("TextChannelId")
+                    b.Property<Guid>("TextChannelId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("UserId");
 
-                    b.HasIndex("TextChannelId");
+                    b.HasIndex("TextChannelId", "CreatedAt", "Id");
 
                     b.ToTable("Messages");
                 });
@@ -481,15 +482,19 @@ namespace Aether.Data.Migrations
 
             modelBuilder.Entity("Aether.Data.Models.Message", b =>
                 {
-                    b.HasOne("Aether.Data.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
+                    b.HasOne("Aether.Data.Models.TextChannel", "TextChannel")
+                        .WithMany("Messages")
+                        .HasForeignKey("TextChannelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Aether.Data.Models.TextChannel", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("TextChannelId");
+                    b.HasOne("Aether.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TextChannel");
 
                     b.Navigation("User");
                 });
