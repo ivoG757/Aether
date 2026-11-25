@@ -6,6 +6,7 @@
     const draft = document.getElementById("message-draft");
     const form = document.getElementById("send-message-form");
     const sendButton = document.getElementById("send-message");
+    const messageContainer = document.getElementById("messages");
 
     if (!tree || !workspace || !title || !chatStatus) {
         console.error("The realm chat elements were not found.");
@@ -70,6 +71,20 @@
         return;
     }
 
+    function createMessageElement(message) {
+        const article = document.createElement("article");
+        article.className = "chat-message";
+
+        const sender = document.createElement("strong");
+        sender.textContent = message.senderName;
+
+        const text = document.createElement("p");
+        text.textContent = message.text ?? "";
+
+        article.append(sender, text);
+        return article;
+    }
+
     async function sendMessage(text, realmId, channelId, token) {
         const url = `/api/realms/${encodeURIComponent(realmId)}` +
             `/channels/${encodeURIComponent(channelId)}/messages`;
@@ -103,8 +118,6 @@
             console.log("Status:", response.status);
             console.log("Content type:", response.headers.get("content-type"));
 
-            document.getElementById
-
             const body = await response.text();
             console.log("Response body:", body);
 
@@ -114,6 +127,11 @@
 
             const messages = JSON.parse(body);
             console.log("Messages:", messages);
+
+            for (const message of messages.slice().reverse()) {
+                messageContainer.append(createMessageElement(message));
+            }
+
 
         } catch (error) {
             console.error("Could not load messages:", error);
